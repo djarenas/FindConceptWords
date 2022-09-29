@@ -5,6 +5,7 @@ This C++ program first reads a text file containing the concepts you want to sea
 
 
 C++ skills involved:
+Read input files
 Vectors
 String manipulations
 Classes
