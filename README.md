@@ -7,7 +7,7 @@ The program then reads the target txt file and stores it as a vector of strings.
 
 The program then searches the vector of strings for each of the concepts' word permutations. The text vector is sorted alphabetically to prevent unnecessary searches. The concept object keeps track of how many times it was found in each search as a vector of integers. The results are outputed to a tab separated text file.
 
-Compilation: g++ -std=c++11 BoseCorrection.cpp Word_Utils.cpp -o fcw.exe
+Compilation: g++ -std=c++11 FindConceptWords.cpp Word_Utils.cpp -o fcw.exe
 
 Execution syntax: fcw.exe < Words_Filename > < Text_Filename > < Output_Filename >
 
