@@ -1,24 +1,27 @@
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <string>
-#include <vector>
 #include <algorithm>
 #include <cctype>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include <stdio.h>
+#include <string.h>
 
 using std::cout;
+using std::endl;
 using std::string;
 using std::vector;
 
-class Concept 
-{
+class Concept {
     public:
         string main_word;
         vector<string> permutations;
         vector<int> counts; 
         
         
-        //Operator overloading for console output
+        //Overload << opeator for the Concept objects.
         friend std::ostream& operator << (std::ostream &output, Concept &concpt)
         {
                     output << "Main word: " << concpt.main_word << std::endl;
@@ -33,20 +36,19 @@ class Concept
                     output << std::endl;
                     return output;  
         }
+
 };
 
-
-
 namespace wordplay {
-    int find_countString(string strTarget, string inputString);
-    vector<string> convertFiletoVector(string filename);
-    void cout_svector(vector<string> input_vec, int n);
-    void removeCharsFromString( string &str, string charsToRemove );
-    void cleanstrVector (vector<string> &strv, string charsToRemove);
-    void change_toLowerCase (vector<string> &strv);
-    vector<Concept> read_wordfile (string filename);
-    Concept search_conceptInStrvec (Concept wordconcept, vector<string> strv);
-    void saveResultsToFile (vector<Concept> cv, string filename);
-
-
+    vector<Concept> readWordsFile(string filename);
+    vector<string> readTextFile(string filename);
+    void fixSeparatedByHyphen(vector<string> &str_vec);
+    void removeNumeric(vector<string> &str_vec);
+    void removeSpecificCharsFromString(string &input_str, string charsToRemove);
+    void removeSpecificCharsFromVector(vector<string> &strv, string charsToRemove);
+    void changeAllToLowerCase(vector<string> &strv);
+    void removeSmallElements(vector<string> &strv, int n);
+    void countConceptInTextVector(Concept &conc, vector<string> &strv);
+    void writeResultsToFile(vector<Concept> cv, string filename);
+    void cout_svector(vector<string> input_vec);
 }
