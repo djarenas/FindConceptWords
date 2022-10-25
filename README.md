@@ -9,6 +9,6 @@ The program then searches the vector of strings for each of the concepts' word p
 
 Compilation: g++ -std=c++11 FindConceptWords.cpp Word_Utils.cpp -o fcw.exe
 
-Execution syntax: fcw.exe < Words_Filename > < Text_Filename > < Output_Filename >
+Execution syntax: fcw.exe <Words_Filename> <Text_Filename> <Output_Filename>
 
 Execution example: bc.exe "Words.txt" "ArenasPRB2010.txt" "output_file.txt"
