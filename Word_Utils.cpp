@@ -191,6 +191,7 @@ namespace wordplay {
     //Purpose: Takes a string of vectors and removes unwanted characters.
     //Input: 1) A vector of strings 2) A string of the characters to remove (i.e. "&*!)(").
     //Original vector of strings is modified in place.
+    ////{"*!Hey", "^College", "rules"} -> {"Hey", "College", "rules"}
     void removeSpecificCharsFromVector(vector<string> &str_vec, string charsToRemove) {
         
         vector<string>::iterator it = str_vec.begin();
