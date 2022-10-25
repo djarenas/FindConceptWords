@@ -11,4 +11,4 @@ Compilation: g++ -std=c++11 FindConceptWords.cpp Word_Utils.cpp -o fcw.exe
 
 Execution syntax: fcw.exe <Words_Filename> <Text_Filename> <Output_Filename>
 
-Execution example: bc.exe "Words.txt" "ArenasPRB2010.txt" "output_file.txt"
+Execution example: fcw.exe "Words.txt" "ArenasPRB2010.txt" "output_file.txt"
