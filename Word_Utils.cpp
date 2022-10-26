@@ -7,7 +7,6 @@ namespace wordplay {
     //same concept. First word will be considered the main word. 
     //(i.e. "optics optic optical optically") -> Main word is "optics", rest are permutations.
     vector<Concept> readWordsFile(string filename) {
-
         vector<Concept> conc_vector = {}; //Return variable. Returned empty if there were errors.
         string line;
         
@@ -23,40 +22,43 @@ namespace wordplay {
 
         //Keep track if there was an unsuccessful read.
         //Keep line number in case you need to orient user on where a reading error occurred.
+        //Make a boolean to keep track of the first word to save separately into the concept's main word.
         bool successful_read = true;
         int ln = 0;
+        bool first_word = true;
 
-        //For each row of the words file (which contains one concept)        
+        //For each row of the words file (which contains one concept).        
         while (successful_read && std::getline(ifile, line)) {
             Concept conc;
             std::stringstream iss(line);
             string input;
 
-            int i = 0; //Keep track of first word so that it is assigned as main word.
+            //Keep track of first word so that it is assigned as main word.
+            bool first_word = true;
+            
+            //Fore every word in the line
             while (iss >> input){
-                
                 if (iss.fail()) {
                     successful_read = false;
-                    cout << "Read error." << endl;
+                    cout << "Read error in Words File." << endl;
                     cout << "Line number: " << ln << endl;
                     break;
-                }
-
-                if (i == 0) {
-                    conc.main_word = input;
                 }
                 
                 //Update permutations vector for this concept
                 conc.permutations.push_back(input);
 
-                i++;
+                //Additionally save the first word as the main word of the Concept structure.
+                if (first_word) {
+                    conc.main_word = input;
+                    first_word = false;
+                }
             }
 
             //Update the concept vector
             conc_vector.push_back(conc);
             //Updates line number
             ln++;
-
         }
 
         //If a read was not successful, the return vector will be empty.
@@ -65,13 +67,11 @@ namespace wordplay {
         }
 
         ifile.close();
-
         return conc_vector;
     }
 
     //Purpose: Reads the text file --> Vector of strings.
     vector<string> readTextFile(string filename) {
-
         vector<string> output_vector = {}; //Return variable. Empty if there were errors.
         std::ifstream ifile (filename);
         string line;
@@ -90,23 +90,21 @@ namespace wordplay {
         bool successful_read = true;
         int ln = 0;
 
-        //
+        //For every word in this line.
         while (successful_read && std::getline(ifile, line)) {
             std::stringstream iss(line);
             std::string input;
 
             while(iss >> input){
-                
                 //Check if there were read errors
                 if (iss.fail()) {
                     successful_read = false;
-                    cout << "Read error." << endl;
+                    cout << "Read error in Text file." << endl;
                     cout << "Line number: " << ln << endl;
                     break;
                 }   
 
                 output_vector.push_back(input);
-
             }         
         }
 
@@ -116,7 +114,6 @@ namespace wordplay {
         }
 
         ifile.close();
-
         return output_vector;
     }
 
@@ -131,7 +128,7 @@ namespace wordplay {
         while(it != str_vec.end()-1) {  
             
             //Find strings that end in hyphen
-            if ((*it).back() == '-'){
+            if ((*it).back() == '-') {
                 (*it).pop_back(); //Remove hyphen (last character).
                 *(it+1) = *it + *(it+1); //Make next element the combination of the two.
                 it = str_vec.erase(it); //Delete this element and points to the next element.
@@ -143,7 +140,6 @@ namespace wordplay {
         }
 
         return;
-
     }
 
     //Purpose: Take a vector of strings, remove digits from each element.
@@ -155,24 +151,23 @@ namespace wordplay {
         while(it != str_vec.end()) {  
             
             //Check every character for a digit. Remove from string if so.
-            int i = 0;
-            while (i < (*it).length()){
-                if (isdigit((*it)[i])){
-                    (*it).pop_back();
+            string::iterator cit = (*it).begin();
+            while (cit < (*it).end()) {
+                if (isdigit((*cit))) {
+                    cit = (*it).erase(cit);
                 }
                 else {
-                    i++;
+                    cit++;
                 }
             }
 
             //Remove vector element if now empty
-            if ((*it).empty()){
+            if ((*it).empty()) {
                 it = str_vec.erase(it); //Delete this element and point to next element.
             }
             else {
                 it++;
             }
-            
         }
 
         return;
@@ -180,18 +175,37 @@ namespace wordplay {
 
     //Purpose: Remove unwanted characters from a string.
     //Input: 1) Target string 2) A string of the characters to remove.
-    void removeSpecificCharsFromString(string &str, string charsToRemove ) {
-        
-        for (unsigned int i = 0; i < charsToRemove.size(); ++i ) {
-                str.erase( remove(str.begin(), str.end(), charsToRemove[i]), str.end() );
+    void removeSpecificCharsFromString(string &targ, string charsToRemove ) {
+        string::iterator tit = targ.begin();
+
+        //For every character in the target string
+        while (tit != targ.end()) {
+            string::iterator cit = charsToRemove.begin();
+            bool wanted = true;
+
+            //Compare to all characters you would like to remove.   
+            while (cit != charsToRemove.end() && wanted) {
+                //Remove this character from the target if equal to a char you want to remove.
+                if (*(tit) == *(cit)) {
+                    wanted = false;
+                }
+                else {
+                    cit++;
+                }
+            }
+
+            if (wanted) {
+                tit++;
+            }
+            else {
+                tit = targ.erase(tit);
+            }
         }
-        return;
     }
 
     //Purpose: Takes a string of vectors and removes unwanted characters.
     //Input: 1) A vector of strings 2) A string of the characters to remove (i.e. "&*!)(").
     //Original vector of strings is modified in place.
-    ////{"*!Hey", "^College", "rules"} -> {"Hey", "College", "rules"}
     void removeSpecificCharsFromVector(vector<string> &str_vec, string charsToRemove) {
         
         vector<string>::iterator it = str_vec.begin();
@@ -208,7 +222,6 @@ namespace wordplay {
             else {
                 it++;
             }
-
         }
         return;
     }
@@ -308,27 +321,32 @@ namespace wordplay {
 
             ofile << cv[i].main_word << "\t";
             
-            //First permutation
+            //Permutations
             if (cv[i].permutations.size() > 1){
                 ofile << cv[i].permutations[1];
             }
-            //Next permutations separated by commas
             for (int j = 2; j < cv[i].permutations.size(); j++){
                 ofile << "," << cv[i].permutations[j];
             }
             
-            //Number of counts
-            ofile << "\t" << cv[i].counts[0] << endl;
+            ofile << "\t";
 
+            //Number of counts
+            if (cv[i].counts.size() > 0){
+                ofile << cv[i].counts[0];
+            }
+            for (int j = 1; j < cv[i].counts.size(); j++){
+                ofile << "," << cv[i].counts[j];
+            }
+            ofile << endl;
         }
         
         ofile.close();
-        
         return; 
     }
 
     //Purpose: Console output a string of vectors.
-    void cout_svector(vector<string> input_vec){
+    void printVector(vector<string> input_vec){
         int n = input_vec.size();
         {
             for (int i = 0; i < n; i++){
