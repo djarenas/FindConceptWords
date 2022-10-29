@@ -1,6 +1,6 @@
 #include "Word_Utils.h"
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
     
     //Check command line had sufficient inputs; terminate otherwise.
     if (argc != 4 ){
@@ -43,23 +43,23 @@ int main(int argc, char** argv){
 
     //Remove unwanted characters
     //{"*!Hey", "^College", "rules"} -> {"Hey", "College", "rules"}
-    wordplay::removeSpecificCharsFromVector(text_vector, "+=!@#$%^&*()'[]{}<>;:.,?");
-    //wordplay::cout_svector(text_vector);
-
+    wordplay::removeSpecificCharsFromVector(text_vector, "+=!@#$%^&*()'[]{}<>;:.,?\"");
+ 
     //Convert all uppercase to lowercase in the target vector.
     wordplay::changeAllToLowerCase(text_vector);
-
-    //Sort the text vector alphabetically
-    sort(text_vector.begin(), text_vector.end());
 
     //Remove text vector elements with less than 2 characters
     //Letters by themselves are unlikely to be searched for
     wordplay::removeSmallElements(text_vector, 2);
 
+    //To speed up the upcoming searches: 
+    //Take the modified text vector and convert it to an unordered map
+    unordered_map<string,int> text_map = wordplay::mapVector(text_vector);
+
     //Search for every concept and update their count vectors.
     //If the concept is found x times in a text vector, the counts vector is appended x. 
     for (vector<Concept>::iterator it = concept_vector.begin(); it < concept_vector.end(); it++) {
-        wordplay::countConceptInTextVector((*it), text_vector);
+        wordplay::countFromMap((*it), text_map);
     }
 
     //Write to specified results file.

@@ -260,46 +260,51 @@ namespace wordplay {
         }
     }
 
-    //Purpose: Search every word permutation in each concept accross the text vector.
-    //Input: 1) vector of Concept 2) vector of string (alphabetically sorted).
-    //The function takes advantadge of alphabet-sorted for speed up.
-    //Appends the number of counts to the member variable fo the Concept.
-    //Modifies the Concept in place.
-    void countConceptInTextVector (Concept &conc, vector<string> &strv) {
 
-        int ct = 0; //Keeps track of how many times the concept was found.
-        
-        //For each word permutation
-        for (int i = 0; i < conc.permutations.size(); i++) {
 
-            //Search every string in text vector
-            vector<string>:: iterator it = strv.begin(); 
-            //Keep track if the searched word is past the alphabetically sorted text vector
-            bool past_alphabetical = false;
 
-            while (!past_alphabetical && it < strv.end()) {
-                
-                //Check if first character is past alphabetically
-                int a = conc.permutations[i][0] < (*it)[0];
-                if (a > 0) {
-                    past_alphabetical = true;
-                }
 
-                //If found, update the counts in the Concept object.
-                if(conc.permutations[i] == (*it)) {
-                    ct++;
-                }
-            
-            it++;
+    //Purpose: Vector of strings -> Unordered map [strings, number of occurrences].
+    //Example: {"hello", "bro", "hello", "again"} -> {hello: 2, bro: 1; again: 1}.
+    unordered_map<string,int> mapVector (vector<string> text_vector) {
+        unordered_map<string,int> usi; //Return variable.
+        int n = text_vector.size();
 
+        //For every string in the text vector.
+        for (int i = 0; i < n; i++) {
+            //If not in map -> Make a new key with value of 1.
+            if (usi.find(text_vector[i]) == usi.end()) {
+                usi[text_vector[i]] = 1;
+            }
+            //If in map -> Update mapped value by additional 1.
+            else {
+                usi[text_vector[i]]++;
             }
         }
+    return usi;
+    }
 
-        //Update the counts vector of the concept
+    //Purpose: Cout the map.
+    void printMap (unordered_map<string,int> text_map) {
+        for (auto i = text_map.begin(); i != text_map.end(); i++) {
+            cout << i->first << ": " << i->second << endl;
+        }
+    }
+
+    //Purpose: Reads a concept and the mapped text vector --> Updates the concept counts.
+    //Input: 1) Concept 2) Map of text_vector. Strings are the key and the mapped value is the
+    //amount of times it was found in the original text vector.
+    //Takes advantade of maps to minimize number of operations.
+    void countFromMap (Concept &conc, unordered_map<string,int> &text_map) {
+        int ct = 0;
+
+        //For each word permutation.
+        for (int i = 0; i < conc.permutations.size(); i++) {
+            ct+= text_map[conc.permutations[i]];
+        }
+
+        //Update the counts on the concept.
         conc.counts.push_back(ct);
-        
-        return;
-
     }
 
     //Purpose: Take a vector of concepts --> Save to file.
@@ -346,7 +351,7 @@ namespace wordplay {
     }
 
     //Purpose: Console output a string of vectors.
-    void printVector(vector<string> input_vec){
+    void printVector(vector<string> input_vec) {
         int n = input_vec.size();
         {
             for (int i = 0; i < n; i++){
