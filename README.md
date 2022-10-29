@@ -3,9 +3,9 @@ Search for concepts within a text file. Multiple words, spellings, or conjugatio
 
 This C++ program first reads a text file containing the concepts you want to search for. In this input file, each row corresponds to a concept and various spellings or conjugations of the concept. The program stores them in a customized "Concept" class. An example input file "Words.txt" is included in the repository.
 
-The program then reads the target txt file and stores it as a vector of strings. The program checks for strings that may have been separated between new lines by a hyphen. It removes numeric characters and a set of custom characters (i.e. ^, &, *) from each string. Changes all the text to lower case and removes single character strings. An example input file "ArenasPRB2010.txt" is included in the repository.
+The program then reads the target text file and stores it as a vector of strings. The strings are preprocessed by 1) Checking for strings that may have been separated between new lines by a hyphen; 2) Removing  numeric characters and customizable non-alphanumeric (i.e. ^, &, *); 3) Changing all to lower case; 4) Removing single character strings. An example input file "ArenasPRB2010.txt" is included in the repository.
 
-The program then searches the vector of strings for each of the concepts' word permutations. The text vector is sorted alphabetically to prevent unnecessary searches. The concept object keeps track of how many times it was found in each search as a vector of integers. The results are outputed to a tab separated text file.
+The program maps the vector of strings into an unordered map that contains unique strings and their repeated occurrences. Each concept is then compared to the map and the concept is updated with the number of times it appeared on this search. The Concepts and their counts are written to an output file.
 
 Compilation: g++ -std=c++11 FindConceptWords.cpp Word_Utils.cpp -o fcw.exe
 
